@@ -3,21 +3,21 @@ function generateSeeds() {
   const pattern = document.getElementById("pattern").value;
   const amount = parseInt(document.getElementById("amount").value);
   const resultBox = document.getElementById("results");
-  resultBox.innerHTML = "";
+  resultBox.innerHTML = ""; // Clear old results
 
-  let baseSeed;
-  let multiplier;
-  let nMin, nMax;
+  let seeds = [];
+  let baseSeed, nMin, nMax, multiplier;
 
   if (edition === "bedrock") {
     multiplier = 2 ** 32;
     nMin = -2147483647;
     nMax = 2147483647;
+    baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
 
-    if (pattern === "diagonal") {
-      baseSeed = 1669320484;
-    } else {
-      baseSeed = 1000686894;
+    for (let i = 0; i < amount; i++) {
+      const n = getRandomInt(nMin, nMax);
+      const seed = multiplier * n + baseSeed;
+      seeds.push(seed.toString());
     }
   } else if (edition === "java") {
     multiplier = 2n ** 48n;
@@ -28,20 +28,20 @@ function generateSeeds() {
       baseSeed = 107038380838084n;
     } else if (pattern === "vertical") {
       baseSeed = 164311266871034n;
-    } else {
-      baseSeed = 107038380838084n; // fallback for horizontal
+    } else if (pattern === "horizontal") {
+      baseSeed = 107038380838084n; // Also valid
+    }
+
+    for (let i = 0; i < amount; i++) {
+      const n = BigInt(getRandomInt(nMin, nMax));
+      const seed = multiplier * n + baseSeed;
+      seeds.push(seed.toString());
     }
   }
 
-  let seeds = [];
-  for (let i = 0; i < amount; i++) {
-    let n = edition === "bedrock" ? getRandomInt(nMin, nMax) : BigInt(getRandomInt(nMin, nMax));
-    let seed = edition === "bedrock" ? multiplier * n + baseSeed : multiplier * n + baseSeed;
-    seeds.push(seed.toString());
-    resultBox.innerHTML += `<p>${seed.toString()}</p>`;
-  }
-
+  // Show the results
   if (seeds.length > 0) {
+    resultBox.innerHTML = seeds.map(s => `<p>${s}</p>`).join("");
     resultBox.innerHTML += `<button onclick="copySeeds()">Copy All Seeds</button>`;
     resultBox.innerHTML += `<textarea id="copyBox" style="width: 100%; height: 0; position: absolute; left: -9999px;">${seeds.join("\n")}</textarea>`;
   }
@@ -58,22 +58,23 @@ function copySeeds() {
   alert("Seeds copied to clipboard!");
 }
 
-// Enable/disable pattern option dynamically
+// Enable/disable Java-only option on page load
 window.onload = () => {
   const editionSelect = document.getElementById("edition");
   const patternSelect = document.getElementById("pattern");
 
   editionSelect.addEventListener("change", () => {
+    const horizontalOption = patternSelect.querySelector("option[value='horizontal']");
     if (editionSelect.value === "java") {
-      patternSelect.querySelector("option[value='horizontal']").disabled = false;
+      horizontalOption.disabled = false;
     } else {
-      patternSelect.querySelector("option[value='horizontal']").disabled = true;
+      horizontalOption.disabled = true;
       if (patternSelect.value === "horizontal") {
         patternSelect.value = "diagonal";
       }
     }
   });
 
-  // Trigger initial state
+  // Trigger once
   editionSelect.dispatchEvent(new Event("change"));
 };
