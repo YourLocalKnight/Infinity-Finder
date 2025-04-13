@@ -211,15 +211,15 @@
 
       let baseSeed, mod, nMin, nMax;
       if (edition === "bedrock") {
-        mod = 2 ** 32;
+        mod = 2 ** 32;  // Mod for Bedrock's seed generation
         nMin = -2147483648;
         nMax = 2147483647;
-        baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
+        baseSeed = 1000686894;  // Base seed for Bedrock mineshaft or decoration (same for both)
       } else {
-        mod = 2n ** 48n;
+        mod = 2n ** 48n;  // Mod for Java's seed generation
         nMin = -32768;
         nMax = 32768;
-        baseSeed = pattern === "horizontal" ? 107038380838084n : 164311266871034n;
+        baseSeed = 164311266871034n;  // Base seed for Java
       }
 
       const seeds = [];
