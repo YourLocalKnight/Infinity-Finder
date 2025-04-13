@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repeating Minecraft Seed Finder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Repeating Minecraft Seed Finder</h1>
+    <label for="edition">Minecraft Edition:</label>
+    <select id="edition">
+      <option value="bedrock">Bedrock</option>
+      <option value="java">Java</option>
+    </select>
+
+    <label for="pattern">Repeating Pattern:</label>
+    <select id="pattern">
+      <option value="diagonal">Diagonally Repeating (Decorations)</option>
+      <option value="vertical">Vertically Repeating (Mineshafts)</option>
+      <option value="horizontal" disabled>Horizontally Repeating (Java Only)</option>
+    </select>
+
+    <label for="amount">How many seeds? (1-100)</label>
+    <input type="number" id="amount" min="1" max="100" value="10" />
+
+    <button onclick="generateSeeds()">Generate Seeds</button>
+
+    <div id="results"></div>
+  </div>
+
+  <script src="calculations.js"></script>
+</body>
+</html>
