@@ -141,13 +141,12 @@
     }
 
     body.vibrant {
-  --bg-color: #fff0fb;
-  --container-color: #f7d0ff;
-  --text-color: #4a004f;
-  --input-bg: #ffe6f7;
-  --highlight: #cc00cc;
-}
-
+      --bg-color: #fff0fb;
+      --container-color: #f7d0ff;
+      --text-color: #4a004f;
+      --input-bg: #ffe6f7;
+      --highlight: #cc00cc;
+    }
   </style>
 </head>
 <body class="light">
@@ -190,6 +189,11 @@
     </select>
   </div>
 
+  <!-- NEW: Credit text below theme selector -->
+  <div style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-color);">
+    Created by <a href="https://github.com/YourLocalKnight" target="_blank" style="color: var(--highlight); text-decoration: none; font-weight: bold;">YourLocalKnight</a>
+  </div>
+
   <script>
     function updateOptions() {
       const edition = document.getElementById("edition").value;
@@ -206,44 +210,44 @@
     }
 
     function generateSeeds() {
-  const edition = document.getElementById("edition").value;
-  const pattern = document.getElementById("pattern").value;
-  const amount = parseInt(document.getElementById("amount").value, 10);
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
+      const edition = document.getElementById("edition").value;
+      const pattern = document.getElementById("pattern").value;
+      const amount = parseInt(document.getElementById("amount").value, 10);
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
 
-  if (amount < 1 || amount > 10000) {
-    resultsDiv.innerHTML = '<div class="error">Error: the number of seeds exceeds the limit (10000)</div>';
-    return;
-  }
+      if (amount < 1 || amount > 10000) {
+        resultsDiv.innerHTML = '<div class="error">Error: the number of seeds exceeds the limit (10000)</div>';
+        return;
+      }
 
-  const seeds = [];
+      const seeds = [];
 
-  if (edition === "bedrock") {
-    const baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
-    const nMin = -2147483647;
-    const nMax = 2147483647;
+      if (edition === "bedrock") {
+        const baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
+        const nMin = -2147483647;
+        const nMax = 2147483647;
 
-    for (let i = 0; i < amount; i++) {
-      const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
-      const seed = BigInt(2 ** 32) * BigInt(n) + BigInt(baseSeed);
-      seeds.push(seed.toString());
+        for (let i = 0; i < amount; i++) {
+          const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
+          const seed = BigInt(2 ** 32) * BigInt(n) + BigInt(baseSeed);
+          seeds.push(seed.toString());
+        }
+      } else {
+        const baseSeed = 164311266871034n;
+        const mod = 2n ** 48n;
+        const nMin = -32768;
+        const nMax = 32768;
+
+        for (let i = 0; i < amount; i++) {
+          const n = BigInt(Math.floor(Math.random() * (nMax - nMin + 1)) + nMin);
+          const seed = mod * n + baseSeed;
+          seeds.push(seed.toString());
+        }
+      }
+
+      resultsDiv.textContent = seeds.join("\n");
     }
-  } else {
-    const baseSeed = 164311266871034n;
-    const mod = 2n ** 48n;
-    const nMin = -32768;
-    const nMax = 32768;
-
-    for (let i = 0; i < amount; i++) {
-      const n = BigInt(Math.floor(Math.random() * (nMax - nMin + 1)) + nMin);
-      const seed = mod * n + baseSeed;
-      seeds.push(seed.toString());
-    }
-  }
-
-  resultsDiv.textContent = seeds.join("\n");
-}
 
     function copySeeds() {
       const results = document.getElementById("results").textContent;
