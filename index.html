@@ -166,7 +166,7 @@
       <option value="horizontal">Horizontally Repeating Mineshafts (Java)</option>
     </select>
 
-    <label for="amount">Number of Seeds (1-10000)</label>
+    <label for="amount">Number of Seeds (1-10000):</label>
     <input type="number" id="amount" min="1" max="10000" value="10" />
 
     <button onclick="generateSeeds()">Generate Seeds</button>
@@ -189,7 +189,6 @@
     </select>
   </div>
 
-  <!-- NEW: Credit text below theme selector -->
   <div style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-color);">
     Created by <a href="https://github.com/YourLocalKnight" target="_blank" style="color: var(--highlight); text-decoration: none; font-weight: bold;">YourLocalKnight</a>
   </div>
@@ -217,7 +216,7 @@
       resultsDiv.innerHTML = "";
 
       if (amount < 1 || amount > 10000) {
-        resultsDiv.innerHTML = '<div class="error">Error: the number of seeds exceeds the limit (10000)</div>';
+        resultsDiv.innerHTML = '<div class="error">Error: the number of desired seeds exceeds the limit (10000)</div>';
         return;
       }
 
