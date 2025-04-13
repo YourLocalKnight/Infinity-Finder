@@ -30,12 +30,28 @@
       --highlight: #00b4d8;
     }
 
-    body.neon {
-      --bg-color: #0f0f1c;
-      --container-color: #1a1a2e;
-      --text-color: #e0e0e0;
-      --input-bg: #2c2c54;
-      --highlight: #e94560;
+    body.green {
+      --bg-color: #0f1e0f;
+      --container-color: #1d3b1d;
+      --text-color: #d4fcd4;
+      --input-bg: #2e4d2e;
+      --highlight: #4cff4c;
+    }
+
+    body.midnight {
+      --bg-color: #000000;
+      --container-color: #0a0a0a;
+      --text-color: #ffffff;
+      --input-bg: #1a1a1a;
+      --highlight: #00ffff;
+    }
+
+    body.sunshine {
+      --bg-color: #fff8e1;
+      --container-color: #fff3cd;
+      --text-color: #5a3600;
+      --input-bg: #ffecb3;
+      --highlight: #ff9800;
     }
 
     body {
@@ -43,11 +59,23 @@
       background-color: var(--bg-color);
       color: var(--text-color);
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      flex-direction: column;
+      align-items: center;
       padding: 40px 20px;
       min-height: 100vh;
       transition: background-color 0.3s, color 0.3s;
+    }
+
+    .palette-bar {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .palette-bar label {
+      color: var(--text-color);
     }
 
     .container {
@@ -59,22 +87,6 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
       transition: background-color 0.3s;
       position: relative;
-    }
-
-    .settings-bar {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      display: flex;
-      gap: 12px;
-      font-size: 14px;
-    }
-
-    .settings-bar label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-color);
     }
 
     h1 {
@@ -142,23 +154,20 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="settings-bar">
-      <label>
-        <input type="checkbox" id="themeCheckbox" onchange="toggleTheme()" />
-        Dark Mode
-      </label>
-      <label>
-        Theme:
-        <select id="paletteSelect" onchange="applyPalette()">
-          <option value="default">Default</option>
-          <option value="light">Light</option>
-          <option value="night">Night Sky</option>
-          <option value="neon">Dark Neon</option>
-        </select>
-      </label>
-    </div>
+  <!-- Theme palette control ABOVE the main box -->
+  <div class="palette-bar">
+    <label for="paletteSelect">Theme:</label>
+    <select id="paletteSelect" onchange="applyPalette()">
+      <option value="default">Default</option>
+      <option value="light">Light</option>
+      <option value="night">Night Sky</option>
+      <option value="green">Dark Green</option>
+      <option value="midnight">Midnight</option>
+      <option value="sunshine">Sunshine</option>
+    </select>
+  </div>
 
+  <div class="container">
     <h1>Infinitely Repeating Minecraft Seeds (1.18+)</h1>
 
     <label for="edition">Minecraft Edition:</label>
@@ -264,13 +273,8 @@
       document.body.removeChild(link);
     }
 
-    function toggleTheme() {
-      const isDark = document.getElementById('themeCheckbox').checked;
-      document.body.classList.toggle('light', !isDark);
-    }
-
     function applyPalette() {
-      document.body.classList.remove('light', 'night', 'neon');
+      document.body.className = ''; // Remove all theme classes
       const selected = document.getElementById('paletteSelect').value;
       if (selected !== 'default') {
         document.body.classList.add(selected);
