@@ -1,2 +1,2 @@
 # Bedrock-Repeater
-A simple tool used to strictly find different variants of infinitely repeating seeds.
+This is a small and miniature repository primarily used to search for infinitely repeating seeds for Minecraft: Bedrock Edition 1.18+.
