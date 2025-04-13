@@ -211,10 +211,10 @@
 
       let baseSeed, mod, nMin, nMax;
       if (edition === "bedrock") {
-        mod = 2 ** 32;  // Mod for Bedrock's seed generation
+        mod = 2 ** 32;  // Correct mod for Bedrock's seed generation
         nMin = -2147483648;
         nMax = 2147483647;
-        baseSeed = 1000686894;  // Base seed for Bedrock mineshaft or decoration (same for both)
+        baseSeed = 1000686894;  // Base seed for Bedrock
       } else {
         mod = 2n ** 48n;  // Mod for Java's seed generation
         nMin = -32768;
@@ -224,14 +224,10 @@
 
       const seeds = [];
       for (let i = 0; i < amount; i++) {
-        const n = edition === "bedrock"
-          ? Math.floor(Math.random() * (nMax - nMin + 1)) + nMin
-          : BigInt(Math.floor(Math.random() * (nMax - nMin + 1)) + nMin);
+        // For Bedrock: random n between -2147483648 and 2147483647
+        const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
 
-        const seed = edition === "bedrock"
-          ? mod * n + baseSeed
-          : mod * n + baseSeed;
-
+        const seed = mod * n + baseSeed;
         seeds.push(seed.toString());
       }
 
