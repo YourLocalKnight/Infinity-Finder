@@ -212,7 +212,7 @@
       let baseSeed, mod, nMin, nMax;
       if (edition === "bedrock") {
         mod = 2 ** 32;
-        nMin = -2147483647;
+        nMin = -2147483648;
         nMax = 2147483647;
         baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
       } else {
