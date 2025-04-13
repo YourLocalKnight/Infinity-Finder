@@ -14,13 +14,28 @@
       --error-color: red;
     }
 
-    .light {
+    body.light {
       --bg-color: #f2f2f2;
       --container-color: #ffffff;
       --text-color: #121212;
       --input-bg: #e0e0e0;
       --highlight: #007acc;
-      --error-color: red;
+    }
+
+    body.night {
+      --bg-color: #0d1b2a;
+      --container-color: #1b263b;
+      --text-color: #e0e1dd;
+      --input-bg: #415a77;
+      --highlight: #00b4d8;
+    }
+
+    body.neon {
+      --bg-color: #0f0f1c;
+      --container-color: #1a1a2e;
+      --text-color: #e0e0e0;
+      --input-bg: #2c2c54;
+      --highlight: #e94560;
     }
 
     body {
@@ -46,14 +61,19 @@
       position: relative;
     }
 
-    .theme-toggle {
+    .settings-bar {
       position: absolute;
       top: 20px;
-      right: 20px;
+      left: 20px;
+      display: flex;
+      gap: 12px;
       font-size: 14px;
+    }
+
+    .settings-bar label {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       color: var(--text-color);
     }
 
@@ -123,10 +143,21 @@
 </head>
 <body>
   <div class="container">
-    <label class="theme-toggle">
-      <input type="checkbox" id="themeCheckbox" onchange="toggleTheme()" />
-      Dark Mode
-    </label>
+    <div class="settings-bar">
+      <label>
+        <input type="checkbox" id="themeCheckbox" onchange="toggleTheme()" />
+        Dark Mode
+      </label>
+      <label>
+        Theme:
+        <select id="paletteSelect" onchange="applyPalette()">
+          <option value="default">Default</option>
+          <option value="light">Light</option>
+          <option value="night">Night Sky</option>
+          <option value="neon">Dark Neon</option>
+        </select>
+      </label>
+    </div>
 
     <h1>Infinitely Repeating Minecraft Seeds (1.18+)</h1>
 
@@ -234,29 +265,19 @@
     }
 
     function toggleTheme() {
-      const isLight = document.getElementById('themeCheckbox').checked;
-      if (isLight) {
-        document.body.classList.add('light');
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.body.classList.remove('light');
-        localStorage.setItem('theme', 'dark');
-      }
+      const isDark = document.getElementById('themeCheckbox').checked;
+      document.body.classList.toggle('light', !isDark);
     }
 
-    function applySavedTheme() {
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const isLight = saved === 'light' || (!saved && !prefersDark);
-
-      if (isLight) {
-        document.body.classList.add('light');
-        document.getElementById('themeCheckbox').checked = true;
+    function applyPalette() {
+      document.body.classList.remove('light', 'night', 'neon');
+      const selected = document.getElementById('paletteSelect').value;
+      if (selected !== 'default') {
+        document.body.classList.add(selected);
       }
     }
 
     updateOptions();
-    applySavedTheme();
   </script>
 </body>
 </html>
