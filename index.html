@@ -196,44 +196,45 @@
     }
 
     function generateSeeds() {
-      const edition = document.getElementById("edition").value;
-      const pattern = document.getElementById("pattern").value;
-      const amount = parseInt(document.getElementById("amount").value, 10);
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "";
+  const edition = document.getElementById("edition").value;
+  const pattern = document.getElementById("pattern").value;
+  const amount = parseInt(document.getElementById("amount").value, 10);
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
 
-      if (amount < 1 || amount > 10000) {
-        resultsDiv.innerHTML = '<div class="error">Error: the number of seeds exceeds the limit (10000)</div>';
-        return;
-      }
+  if (amount < 1 || amount > 10000) {
+    resultsDiv.innerHTML = '<div class="error">Error: the number of seeds exceeds the limit (10000)</div>';
+    return;
+  }
 
-      const seeds = [];
+  let baseSeed, mod, nMin, nMax;
+  if (edition === "bedrock") {
+    mod = 2 ** 32;
+    nMin = -2147483648;
+    nMax = 2147483647;
+    baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
+  } else {
+    mod = 2n ** 48n;
+    nMin = -32768;
+    nMax = 32768;
+    baseSeed = 164311266871034n;
+  }
 
-      if (edition === "bedrock") {
-        const baseSeed = 1000686894;
-        const nMin = -2147483648;
-        const nMax = 2147483647;
+  const seeds = [];
+  for (let i = 0; i < amount; i++) {
+    const n = edition === "bedrock"
+      ? Math.floor(Math.random() * (nMax - nMin + 1)) + nMin
+      : BigInt(Math.floor(Math.random() * (nMax - nMin + 1)) + nMin);
 
-        for (let i = 0; i < amount; i++) {
-          const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
-          const seed = BigInt(2 ** 32) * BigInt(n) + BigInt(baseSeed);
-          seeds.push(seed.toString());
-        }
-      } else {
-        const mod = 2n ** 48n;
-        const nMin = -32768;
-        const nMax = 32768;
-        const baseSeed = 164311266871034n;
+    const seed = edition === "bedrock"
+      ? mod * n + baseSeed
+      : mod * n + baseSeed;
 
-        for (let i = 0; i < amount; i++) {
-          const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
-          const seed = mod * BigInt(n) + baseSeed;
-          seeds.push(seed.toString());
-        }
-      }
+    seeds.push(seed.toString());
+  }
 
-      resultsDiv.textContent = seeds.join("\n");
-    }
+  resultsDiv.textContent = seeds.join("\n");
+}
 
     function copySeeds() {
       const results = document.getElementById("results").textContent;
