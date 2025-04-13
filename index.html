@@ -23,11 +23,6 @@
       transition: background-color 0.3s, color 0.3s;
     }
 
-    .palette-bar {
-      padding: 1rem;
-      text-align: center;
-    }
-
     .container {
       background-color: var(--container-color);
       max-width: 600px;
@@ -39,6 +34,7 @@
 
     h1 {
       margin-top: 0;
+      text-align: center;
     }
 
     label {
@@ -86,10 +82,21 @@
       border-radius: 5px;
     }
 
+    /* Theme Selector Below UI */
+    .palette-bar {
+      text-align: center;
+      margin: 1rem auto;
+    }
+
+    #paletteSelect {
+      width: 200px;
+      padding: 0.5rem;
+    }
+
     /* Themes */
     body.dark {
-      --bg-color: #181818;
-      --container-color: #252525;
+      --bg-color: #1e1e1e;
+      --container-color: #2a2a2a;
       --text-color: #f0f0f0;
       --input-bg: #2f2f2f;
       --highlight: #00c8ff;
@@ -126,21 +133,17 @@
       --input-bg: #fff1b3;
       --highlight: #ff9900;
     }
+
+    body.crimson {
+      --bg-color: #2b0000;
+      --container-color: #3a0d0d;
+      --text-color: #ffe6e6;
+      --input-bg: #4d0d0d;
+      --highlight: #ff4d4d;
+    }
   </style>
 </head>
 <body class="light">
-  <div class="palette-bar">
-    <label for="paletteSelect">Theme:</label>
-    <select id="paletteSelect" onchange="applyPalette()">
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-      <option value="night">Night Sky</option>
-      <option value="green">Dark Green</option>
-      <option value="midnight">Midnight</option>
-      <option value="sunshine">Sunshine</option>
-    </select>
-  </div>
-
   <div class="container">
     <h1>Infinitely Repeating Minecraft Seeds for 1.18+</h1>
 
@@ -164,6 +167,19 @@
 
     <div id="results"></div>
     <button class="copy-btn" onclick="copySeeds()">Copy Seeds</button>
+  </div>
+
+  <div class="palette-bar">
+    <label for="paletteSelect">Theme:</label><br>
+    <select id="paletteSelect" onchange="applyPalette()">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+      <option value="night">Night Sky</option>
+      <option value="green">Dark Green</option>
+      <option value="midnight">Midnight</option>
+      <option value="sunshine">Sunshine</option>
+      <option value="crimson">Crimson Red</option>
+    </select>
   </div>
 
   <script>
