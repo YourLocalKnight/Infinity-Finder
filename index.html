@@ -211,30 +211,23 @@
 
       let baseSeed, mod, nMin, nMax;
       if (edition === "bedrock") {
-        mod = 2 ** 32;  // For Bedrock: 2^32
+        mod = 2 ** 32;  // Correct mod for Bedrock's seed generation
         nMin = -2147483648;
         nMax = 2147483647;
-        baseSeed = 1000686894;  // Base seed for Bedrock (fixed seed value for demo)
+        baseSeed = 1000686894;  // Base seed for Bedrock
       } else {
-        mod = 2n ** 48n;  // For Java: 2^48
+        mod = 2n ** 48n;  // Mod for Java's seed generation
         nMin = -32768;
         nMax = 32768;
-        baseSeed = pattern === "horizontal" ? 107038380838084n : 164311266871034n;  // Base seed for Java
+        baseSeed = 164311266871034n;  // Base seed for Java
       }
 
       const seeds = [];
       for (let i = 0; i < amount; i++) {
-        const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;  // Random n between nMin and nMax
-        let seed;
-        
-        if (edition === "bedrock") {
-          // Bedrock formula
-          seed = mod * n + baseSeed;
-        } else {
-          // Java formula
-          seed = mod * n + baseSeed;
-        }
-        
+        // For Bedrock: random n between -2147483648 and 2147483647
+        const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
+
+        const seed = mod * n + baseSeed;
         seeds.push(seed.toString());
       }
 
