@@ -207,30 +207,29 @@
     return;
   }
 
-  let baseSeed, mod, nMin, nMax;
-  if (edition === "bedrock") {
-    mod = 2 ** 32;
-    nMin = -2147483648;
-    nMax = 2147483647;
-    baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
-  } else {
-    mod = 2n ** 48n;
-    nMin = -32768;
-    nMax = 32768;
-    baseSeed = 164311266871034n;
-  }
-
   const seeds = [];
-  for (let i = 0; i < amount; i++) {
-    const n = edition === "bedrock"
-      ? Math.floor(Math.random() * (nMax - nMin + 1)) + nMin
-      : BigInt(Math.floor(Math.random() * (nMax - nMin + 1)) + nMin);
 
-    const seed = edition === "bedrock"
-      ? mod * n + baseSeed
-      : mod * n + baseSeed;
+  if (edition === "bedrock") {
+    const baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
+    const nMin = -2147483647;
+    const nMax = 2147483647;
 
-    seeds.push(seed.toString());
+    for (let i = 0; i < amount; i++) {
+      const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
+      const seed = BigInt(2 ** 32) * BigInt(n) + BigInt(baseSeed);
+      seeds.push(seed.toString());
+    }
+  } else {
+    const baseSeed = 164311266871034n;
+    const mod = 2n ** 48n;
+    const nMin = -32768;
+    const nMax = 32768;
+
+    for (let i = 0; i < amount; i++) {
+      const n = BigInt(Math.floor(Math.random() * (nMax - nMin + 1)) + nMin);
+      const seed = mod * n + baseSeed;
+      seeds.push(seed.toString());
+    }
   }
 
   resultsDiv.textContent = seeds.join("\n");
