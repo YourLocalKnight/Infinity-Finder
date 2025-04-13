@@ -3,92 +3,152 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Infinitely Repeating Minecraft Seeds</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Infinitely Repeating Seeds</title>
   <style>
+    :root {
+      --bg-color: #ffffff;
+      --container-color: #f0f0f0;
+      --text-color: #000000;
+      --input-bg: #ffffff;
+      --highlight: #007bff;
+      --error-color: red;
+    }
+
     body {
       margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
+      background-color: var(--container-color);
       max-width: 600px;
-      margin: 80px auto 40px;
-      background-color: var(--background);
-      color: var(--text);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
+      margin-top: 0;
       text-align: center;
     }
 
-    label, select, input, button {
+    label {
       display: block;
-      margin: 10px auto;
-      width: 90%;
-      max-width: 500px;
-      font-size: 1rem;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+    }
+
+    button {
+      background-color: var(--highlight);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     #results {
-      margin-top: 20px;
+      margin-top: 1.5rem;
       white-space: pre-wrap;
       word-wrap: break-word;
     }
 
-    .theme-toggle {
-      display: flex;
-      justify-content: center;
-      margin: 0 auto 20px;
-      max-width: 600px;
+    .error {
+      color: var(--error-color);
+      font-weight: bold;
     }
 
-    :root {
-      --background: #ffffff;
-      --text: #000000;
+    .copy-btn {
+      margin-top: 1rem;
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 5px;
     }
 
-    .theme-dark {
-      --background: #111111;
-      --text: #f1f1f1;
+    /* Theme Selector Below UI */
+    .palette-bar {
+      text-align: center;
+      margin: 1rem auto;
     }
 
-    .theme-midnight {
-      --background: #000000;
-      --text: #ffffff;
+    #paletteSelect {
+      width: 200px;
+      padding: 0.5rem;
     }
 
-    .theme-sunshine {
-      --background: #fff4d2;
-      --text: #5a3e00;
+    /* Themes */
+    body.dark {
+      --bg-color: #1e1e1e;
+      --container-color: #2a2a2a;
+      --text-color: #f0f0f0;
+      --input-bg: #2f2f2f;
+      --highlight: #00c8ff;
     }
 
-    .theme-dark-green {
-      --background: #0b2e1f;
-      --text: #ccffdd;
+    body.night {
+      --bg-color: #0e1a2b;
+      --container-color: #1a2d3f;
+      --text-color: #e0f0ff;
+      --input-bg: #223344;
+      --highlight: #4fc3f7;
     }
 
-    .theme-vibrant-violet {
-      --background: #ffffff;
-      --text: #c800ff;
+    body.green {
+      --bg-color: #0f1e14;
+      --container-color: #1b2e20;
+      --text-color: #d0f0d0;
+      --input-bg: #223322;
+      --highlight: #34d27e;
     }
 
-    .theme-crimson-red {
-      --background: #2b0000;
-      --text: #ff9999;
+    body.midnight {
+      --bg-color: #000000;
+      --container-color: #111111;
+      --text-color: #eeeeee;
+      --input-bg: #1a1a1a;
+      --highlight: #0057ff;
+    }
+
+    body.sunshine {
+      --bg-color: #fff7e6;
+      --container-color: #fff3cc;
+      --text-color: #5c3d00;
+      --input-bg: #fff1b3;
+      --highlight: #ff9900;
+    }
+
+    body.crimson {
+      --bg-color: #2b0000;
+      --container-color: #3a0d0d;
+      --text-color: #ffe6e6;
+      --input-bg: #4d0d0d;
+      --highlight: #ff4d4d;
     }
   </style>
 </head>
-<body>
+<body class="light">
   <div class="container">
     <h1>Infinitely Repeating Minecraft Seeds for 1.18+</h1>
 
     <label for="edition">Minecraft Edition:</label>
-    <select id="edition">
+    <select id="edition" onchange="updateOptions()">
       <option value="bedrock">Bedrock</option>
       <option value="java">Java</option>
     </select>
@@ -97,85 +157,100 @@
     <select id="pattern">
       <option value="diagonal">Diagonally Repeating (Decorations)</option>
       <option value="vertical">Vertically Repeating (Mineshafts)</option>
-      <option value="horizontal">Horizontally Repeating (Mineshafts - Java Only)</option>
+      <option value="horizontal">Horizontally Repeating (Java Only)</option>
     </select>
 
-    <label for="amount">Number of seeds (1-10000):</label>
+    <label for="amount">Number of seeds (1-10000)</label>
     <input type="number" id="amount" min="1" max="10000" value="10" />
 
     <button onclick="generateSeeds()">Generate Seeds</button>
 
     <div id="results"></div>
-    <button id="copyButton" onclick="copySeeds()">Copy Seeds</button>
+    <button class="copy-btn" onclick="copySeeds()">Copy Seeds</button>
   </div>
 
-  <div class="theme-toggle">
-    <label for="themeSelect">Theme:</label>
-    <select id="themeSelect" onchange="changeTheme()">
-      <option value="">Light (Default)</option>
-      <option value="theme-dark">Dark</option>
-      <option value="theme-midnight">Midnight</option>
-      <option value="theme-sunshine">Sunshine</option>
-      <option value="theme-dark-green">Dark Green</option>
-      <option value="theme-vibrant-violet">Vibrant Violet</option>
-      <option value="theme-crimson-red">Crimson Red</option>
+  <div class="palette-bar">
+    <label for="paletteSelect">Theme:</label><br>
+    <select id="paletteSelect" onchange="applyPalette()">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+      <option value="night">Night Sky</option>
+      <option value="green">Dark Green</option>
+      <option value="midnight">Midnight</option>
+      <option value="sunshine">Sunshine</option>
+      <option value="crimson">Crimson Red</option>
     </select>
   </div>
 
   <script>
-    const baseSeeds = {
-      bedrock: {
-        diagonal: 1669320484,
-        vertical: 1000686894,
-      },
-      java: {
-        vertical: 164311266871034,
-        horizontal: 107038380838084,
-      },
-    };
+    function updateOptions() {
+      const edition = document.getElementById("edition").value;
+      const pattern = document.getElementById("pattern");
+      pattern.querySelectorAll("option").forEach(option => {
+        option.disabled = false;
+      });
+
+      if (edition === "bedrock") {
+        pattern.querySelector("option[value='horizontal']").disabled = true;
+      } else {
+        pattern.querySelector("option[value='diagonal']").disabled = true;
+      }
+    }
 
     function generateSeeds() {
       const edition = document.getElementById("edition").value;
       const pattern = document.getElementById("pattern").value;
-      const amount = parseInt(document.getElementById("amount").value);
+      const amount = parseInt(document.getElementById("amount").value, 10);
       const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
 
       if (amount < 1 || amount > 10000) {
-        resultsDiv.innerText = "Error: the number of seeds exceeds the limit (1-10000).";
+        resultsDiv.innerHTML = '<div class="error">Error: the number of seeds exceeds the limit (10000)</div>';
         return;
       }
 
-      // Invalid combo
-      if (edition === "java" && pattern === "diagonal") {
-        resultsDiv.innerText = "Diagonally repeating decoration seeds are Bedrock-exclusive.";
-        return;
+      let baseSeed, mod, nMin, nMax;
+      if (edition === "bedrock") {
+        mod = 2 ** 32;
+        nMin = -2147483647;
+        nMax = 2147483647;
+        baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
+      } else {
+        mod = 2n ** 48n;
+        nMin = -32768;
+        nMax = 32768;
+        baseSeed = pattern === "horizontal" ? 107038380838084n : 164311266871034n;
       }
 
       const seeds = [];
-      const max = edition === "bedrock" ? 2147483647 : 32768;
-      const min = -max;
-      const nRange = max - min + 1;
-
-      const baseSeed = baseSeeds[edition][pattern];
-      const shift = edition === "bedrock" ? Math.pow(2, 32) : Math.pow(2, 48);
-
       for (let i = 0; i < amount; i++) {
-        const n = Math.floor(Math.random() * nRange) + min;
-        const seed = BigInt(shift) * BigInt(n) + BigInt(baseSeed);
+        const n = edition === "bedrock"
+          ? Math.floor(Math.random() * (nMax - nMin + 1)) + nMin
+          : BigInt(Math.floor(Math.random() * (nMax - nMin + 1)) + nMin);
+
+        const seed = edition === "bedrock"
+          ? mod * n + baseSeed
+          : mod * n + baseSeed;
+
         seeds.push(seed.toString());
       }
 
-      resultsDiv.innerText = seeds.join("\n");
+      resultsDiv.textContent = seeds.join("\n");
     }
 
     function copySeeds() {
-      const results = document.getElementById("results").innerText;
-      navigator.clipboard.writeText(results).then(() => alert("Seeds copied!"));
+      const results = document.getElementById("results").textContent;
+      navigator.clipboard.writeText(results).then(() => {
+        alert("Seeds copied to clipboard!");
+      });
     }
 
-    function changeTheme() {
-      document.body.className = document.getElementById("themeSelect").value;
+    function applyPalette() {
+      const selected = document.getElementById("paletteSelect").value;
+      document.body.className = selected;
     }
+
+    updateOptions();
   </script>
 </body>
 </html>
