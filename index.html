@@ -82,7 +82,6 @@
       border-radius: 5px;
     }
 
-    /* Theme Selector Below UI */
     .palette-bar {
       text-align: center;
       margin: 1rem auto;
@@ -93,7 +92,6 @@
       padding: 0.5rem;
     }
 
-    /* Themes */
     body.dark {
       --bg-color: #1e1e1e;
       --container-color: #2a2a2a;
@@ -209,26 +207,29 @@
         return;
       }
 
-      let baseSeed, mod, nMin, nMax;
-      if (edition === "bedrock") {
-        mod = 2 ** 32;  // Correct mod for Bedrock's seed generation
-        nMin = -2147483648;
-        nMax = 2147483647;
-        baseSeed = 1000686894;  // Base seed for Bedrock
-      } else {
-        mod = 2n ** 48n;  // Mod for Java's seed generation
-        nMin = -32768;
-        nMax = 32768;
-        baseSeed = 164311266871034n;  // Base seed for Java
-      }
-
       const seeds = [];
-      for (let i = 0; i < amount; i++) {
-        // For Bedrock: random n between -2147483648 and 2147483647
-        const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
 
-        const seed = mod * n + baseSeed;
-        seeds.push(seed.toString());
+      if (edition === "bedrock") {
+        const baseSeed = 1000686894;
+        const nMin = -2147483648;
+        const nMax = 2147483647;
+
+        for (let i = 0; i < amount; i++) {
+          const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
+          const seed = BigInt(2 ** 32) * BigInt(n) + BigInt(baseSeed);
+          seeds.push(seed.toString());
+        }
+      } else {
+        const mod = 2n ** 48n;
+        const nMin = -32768;
+        const nMax = 32768;
+        const baseSeed = 164311266871034n;
+
+        for (let i = 0; i < amount; i++) {
+          const n = Math.floor(Math.random() * (nMax - nMin + 1)) + nMin;
+          const seed = mod * BigInt(n) + baseSeed;
+          seeds.push(seed.toString());
+        }
       }
 
       resultsDiv.textContent = seeds.join("\n");
