@@ -3,22 +3,30 @@ function generateSeeds() {
   const pattern = document.getElementById("pattern").value;
   const amount = parseInt(document.getElementById("amount").value);
   const resultBox = document.getElementById("results");
-  resultBox.innerHTML = ""; // Clear old results
+  resultBox.innerHTML = "";
 
   let seeds = [];
-  let baseSeed, nMin, nMax, multiplier;
+  let baseSeed;
+  let multiplier;
+  let nMin, nMax;
 
   if (edition === "bedrock") {
     multiplier = 2 ** 32;
     nMin = -2147483647;
     nMax = 2147483647;
-    baseSeed = pattern === "diagonal" ? 1669320484 : 1000686894;
+
+    if (pattern === "diagonal") {
+      baseSeed = 1669320484;
+    } else {
+      baseSeed = 1000686894;
+    }
 
     for (let i = 0; i < amount; i++) {
       const n = getRandomInt(nMin, nMax);
       const seed = multiplier * n + baseSeed;
       seeds.push(seed.toString());
     }
+
   } else if (edition === "java") {
     multiplier = 2n ** 48n;
     nMin = -32768;
@@ -29,7 +37,9 @@ function generateSeeds() {
     } else if (pattern === "vertical") {
       baseSeed = 164311266871034n;
     } else if (pattern === "horizontal") {
-      baseSeed = 107038380838084n; // Also valid
+      baseSeed = 107038380838084n;
+    } else {
+      baseSeed = 107038380838084n; // fallback
     }
 
     for (let i = 0; i < amount; i++) {
@@ -39,11 +49,11 @@ function generateSeeds() {
     }
   }
 
-  // Show the results
   if (seeds.length > 0) {
-    resultBox.innerHTML = seeds.map(s => `<p>${s}</p>`).join("");
-    resultBox.innerHTML += `<button onclick="copySeeds()">Copy All Seeds</button>`;
-    resultBox.innerHTML += `<textarea id="copyBox" style="width: 100%; height: 0; position: absolute; left: -9999px;">${seeds.join("\n")}</textarea>`;
+    const output = seeds.map(s => `<p>${s}</p>`).join("");
+    resultBox.innerHTML = output +
+      `<button onclick="copySeeds()">Copy All Seeds</button>` +
+      `<textarea id="copyBox" style="width: 100%; height: 0; position: absolute; left: -9999px;">${seeds.join("\n")}</textarea>`;
   }
 }
 
@@ -54,11 +64,11 @@ function getRandomInt(min, max) {
 function copySeeds() {
   const copyBox = document.getElementById("copyBox");
   copyBox.select();
+  copyBox.setSelectionRange(0, 99999); // For mobile
   document.execCommand("copy");
   alert("Seeds copied to clipboard!");
 }
 
-// Enable/disable Java-only option on page load
 window.onload = () => {
   const editionSelect = document.getElementById("edition");
   const patternSelect = document.getElementById("pattern");
@@ -75,6 +85,5 @@ window.onload = () => {
     }
   });
 
-  // Trigger once
   editionSelect.dispatchEvent(new Event("change"));
 };
